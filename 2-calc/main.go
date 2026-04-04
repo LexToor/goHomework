@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -37,7 +38,7 @@ func main() {
 
 	switch operation {
 	case "AVG":
-		fmt.Println("Среднее:", sum(numsArr)/2)
+		fmt.Println("Среднее:", sum(numsArr)/float64(len(numsArr)))
 	case "SUM":
 		fmt.Println("Сумма:", sum(numsArr))
 	case "MED":
@@ -93,11 +94,14 @@ func sum(numsArr []float64) float64 {
 func median(numsArr []float64) float64 {
 	var result float64
 	size := len(numsArr)
+	fmt.Println(numsArr)
+	sort.Float64s(numsArr)
+	fmt.Println(numsArr)
 
 	if size%2 == 0 {
-		result = (numsArr[size/2] + numsArr[size/2+1]) / 2
+		result = (numsArr[size/2] + numsArr[size/2-1]) / 2
 	} else {
-		result = numsArr[(size+1)/2]
+		result = numsArr[(size+1)/2-1]
 	}
 
 	return result
