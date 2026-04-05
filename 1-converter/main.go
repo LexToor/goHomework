@@ -6,16 +6,16 @@ import (
 	"strings"
 )
 
-var currencyArray = make(map[string]map[string]float64, 3)
 var arrCurrency = [3]string{"USD", "EUR", "RUB"}
 
 func main() {
+	var currencyArray = make(map[string]map[string]float64, 3)
 	var sourceCurrency string
 	var value float64
 	var targetCurrency string
 	var message string
 
-	initCurrencyArray()
+	initCurrencyArray(&currencyArray)
 
 	message = "Введите исходную валюту (" + strings.Join(arrCurrency[:], ", ") + "): "
 	for {
@@ -51,7 +51,7 @@ func main() {
 		fmt.Println("Валюта указана не верно, повторите ввод.")
 	}
 
-	result := converterCurrency(value, sourceCurrency, targetCurrency)
+	result := converterCurrency(value, sourceCurrency, targetCurrency, &currencyArray)
 	fmt.Printf("Итого: %.2f%s", result, targetCurrency)
 
 }
@@ -84,19 +84,19 @@ func isValidFloat(value string) (float64, bool) {
 	return result, true
 }
 
-func converterCurrency(value float64, sourceCurrency string, targetCurrency string) (result float64) {
-	return currencyArray[sourceCurrency][targetCurrency] * value
+func converterCurrency(value float64, sourceCurrency string, targetCurrency string, currencyArray *map[string]map[string]float64) (result float64) {
+	return (*currencyArray)[sourceCurrency][targetCurrency] * value
 }
 
-func initCurrencyArray() {
+func initCurrencyArray(currencyArray *map[string]map[string]float64) {
 	for _, currency := range arrCurrency {
-		currencyArray[currency] = make(map[string]float64, 2)
+		(*currencyArray)[currency] = make(map[string]float64, 2)
 	}
 
-	currencyArray["EUR"]["USD"] = 1.15
-	currencyArray["EUR"]["RUB"] = 92.19
-	currencyArray["USD"]["EUR"] = 0.87
-	currencyArray["USD"]["RUB"] = 79.73
-	currencyArray["RUB"]["EUR"] = 0.010847
-	currencyArray["RUB"]["USD"] = 0.012542
+	(*currencyArray)["EUR"]["USD"] = 1.15
+	(*currencyArray)["EUR"]["RUB"] = 92.19
+	(*currencyArray)["USD"]["EUR"] = 0.87
+	(*currencyArray)["USD"]["RUB"] = 79.73
+	(*currencyArray)["RUB"]["EUR"] = 0.010847
+	(*currencyArray)["RUB"]["USD"] = 0.012542
 }
