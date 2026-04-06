@@ -6,17 +6,16 @@ import (
 	"strings"
 )
 
-const USDEUR float64 = 0.8631
-const USDRUB float64 = 80.62
-
 var arrCurrency = [3]string{"USD", "EUR", "RUB"}
 
 func main() {
-
+	var currencyArray = make(map[string]map[string]float64, 3)
 	var sourceCurrency string
 	var value float64
 	var targetCurrency string
 	var message string
+
+	initCurrencyArray(&currencyArray)
 
 	message = "Введите исходную валюту (" + strings.Join(arrCurrency[:], ", ") + "): "
 	for {
@@ -52,7 +51,7 @@ func main() {
 		fmt.Println("Валюта указана не верно, повторите ввод.")
 	}
 
-	result := converterCurrency(value, sourceCurrency, targetCurrency)
+	result := converterCurrency(value, sourceCurrency, targetCurrency, &currencyArray)
 	fmt.Printf("Итого: %.2f%s", result, targetCurrency)
 
 }
@@ -85,20 +84,19 @@ func isValidFloat(value string) (float64, bool) {
 	return result, true
 }
 
-func converterCurrency(value float64, sourceCurrency string, targetCurrency string) (result float64) {
-	switch {
-	case sourceCurrency == "EUR" && targetCurrency == "USD":
-		result = value / USDEUR
-	case sourceCurrency == "USD" && targetCurrency == "EUR":
-		result = value * USDEUR
-	case sourceCurrency == "RUB" && targetCurrency == "USD":
-		result = value / USDRUB
-	case sourceCurrency == "USD" && targetCurrency == "RUB":
-		result = value * USDRUB
-	case sourceCurrency == "EUR" && targetCurrency == "RUB":
-		result = value / USDEUR * USDRUB
-	case sourceCurrency == "RUB" && targetCurrency == "EUR":
-		result = value / USDRUB * USDEUR
+func converterCurrency(value float64, sourceCurrency string, targetCurrency string, currencyArray *map[string]map[string]float64) (result float64) {
+	return (*currencyArray)[sourceCurrency][targetCurrency] * value
+}
+
+func initCurrencyArray(currencyArray *map[string]map[string]float64) {
+	for _, currency := range arrCurrency {
+		(*currencyArray)[currency] = make(map[string]float64, 2)
 	}
-	return
+
+	(*currencyArray)["EUR"]["USD"] = 1.15
+	(*currencyArray)["EUR"]["RUB"] = 92.19
+	(*currencyArray)["USD"]["EUR"] = 0.87
+	(*currencyArray)["USD"]["RUB"] = 79.73
+	(*currencyArray)["RUB"]["EUR"] = 0.010847
+	(*currencyArray)["RUB"]["USD"] = 0.012542
 }
