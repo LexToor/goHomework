@@ -6,18 +6,34 @@ import (
 	"encoding/json"
 )
 
-func SaveBin(bin *bins.Bin, filename string) error {
+type StorageImpl struct {
+	fileManager files.FileManager
+}
+
+func NewStorage(fileManager files.FileManager) *StorageImpl {
+	return &StorageImpl{
+		fileManager: fileManager,
+	}
+}
+
+type Storage interface {
+	SaveBin(bin *bins.Bin, filename string) error
+	LoadListBin(filename string) ([]bins.Bin, error)
+	SaveListBin(listBin []bins.Bin, filename string) error
+}
+
+func (s *StorageImpl) SaveBin(bin *bins.Bin, filename string) error {
 	data, err := json.Marshal(bin)
 	if err == nil {
-		err = files.Save(data, filename)
+		err = s.fileManager.Save(data, filename)
 	}
 
 	return err
 }
 
-func LoadListBin(filename string) ([]bins.Bin, error) {
+func (s *StorageImpl) LoadListBin(filename string) ([]bins.Bin, error) {
 	var listBin []bins.Bin
-	data, err := files.Load(filename)
+	data, err := s.fileManager.Load(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -30,10 +46,10 @@ func LoadListBin(filename string) ([]bins.Bin, error) {
 	return listBin, nil
 }
 
-func SaveListBin(listBin *[]bins.Bin, filename string) error {
+func (s *StorageImpl) SaveListBin(listBin *[]bins.Bin, filename string) error {
 	data, err := json.Marshal(listBin)
 	if err == nil {
-		err = files.Save(data, filename)
+		err = s.fileManager.Save(data, filename)
 	}
 
 	return err
