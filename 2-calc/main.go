@@ -13,6 +13,11 @@ func main() {
 	var message string
 	var operation string
 	var numsArr []float64
+	functions := map[string]func([]float64){
+		"AVG": func(numsArr []float64) { fmt.Println("Среднее:", sum(numsArr)/float64(len(numsArr))) },
+		"SUM": func(numsArr []float64) { fmt.Println("Сумма:", sum(numsArr)) },
+		"MED": func(numsArr []float64) { fmt.Println(median(numsArr)) },
+	}
 
 	message = "Введите операция над числами (" + strings.Join(OPERATIONS[:], ", ") + "): "
 	for {
@@ -36,14 +41,15 @@ func main() {
 		}
 	}
 
-	switch operation {
-	case "AVG":
-		fmt.Println("Среднее:", sum(numsArr)/float64(len(numsArr)))
-	case "SUM":
-		fmt.Println("Сумма:", sum(numsArr))
-	case "MED":
-		fmt.Println(median(numsArr))
-	}
+	functions[operation](numsArr)
+	// switch operation {
+	// case "AVG":
+	// 	fmt.Println("Среднее:", sum(numsArr)/float64(len(numsArr)))
+	// case "SUM":
+	// 	fmt.Println("Сумма:", sum(numsArr))
+	// case "MED":
+	// 	fmt.Println(median(numsArr))
+	// }
 
 }
 
@@ -94,9 +100,7 @@ func sum(numsArr []float64) float64 {
 func median(numsArr []float64) float64 {
 	var result float64
 	size := len(numsArr)
-	fmt.Println(numsArr)
 	sort.Float64s(numsArr)
-	fmt.Println(numsArr)
 
 	if size%2 == 0 {
 		result = (numsArr[size/2] + numsArr[size/2-1]) / 2
