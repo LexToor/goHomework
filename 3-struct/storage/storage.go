@@ -17,7 +17,7 @@ func NewStorage(fileManager files.FileManager) *StorageImpl {
 }
 
 type Storage interface {
-	SaveBin(bin bins.Bin, filename string) error
+	SaveBin(bin *bins.Bin, filename string) error
 	LoadListBin(filename string) ([]bins.Bin, error)
 	SaveListBin(listBin []bins.Bin, filename string) error
 }
