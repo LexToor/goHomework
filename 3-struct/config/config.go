@@ -25,6 +25,6 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
-		key: key,
+		Key: key,
 	}
 }
